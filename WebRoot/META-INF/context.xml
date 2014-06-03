@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='gb2312'?>
+<Context reloadable = "false" crossContext = "true">
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+	
+	<!-- DBCP数据源配置
+	<Resource name = "jdbc/tdjPool" 
+	            auth = "Container"
+	     description = "DB Connection"
+		 	    type = "javax.sql.DataSource"
+	 driverClassName = "oracle.jdbc.OracleDriver"
+			     url = "jdbc:oracle:thin:@192.168.1.254:1521:sryx"
+			username = "scm"
+			password = "scm"
+		   maxActive = "50"
+			 maxIdle = "30"
+			 maxWait = "10000"
+		logAbandoned = "true"
+	 removeAbandoned = "true"
+     removeAbandonedTimeout = "10" /> -->
+  <!-- 注意C3P0数据源只能使用如下这种配置方式 
+	        jdbcUrl = "jdbc:oracle:thin:@192.168.1.254:1521:sryx"
+	        jdbcUrl = "jdbc:oracle:thin:@www.91eit.com:4444:sryx"-->
+  <Resource name = "jdbc/eitpool4"
+	           auth = "Container"
+	    description = "DB Connection"
+	           type = "com.mchange.v2.c3p0.ComboPooledDataSource"
+	        factory = "org.apache.naming.factory.BeanFactory"
+	    driverClass = "oracle.jdbc.OracleDriver"
+	        jdbcUrl = "jdbc:oracle:thin:@192.168.1.254:1521:sryx"
+	           user = "eit4"
+		   password = "eit4"
+	initialPoolSize = "10"
+	    minPoolSize = "3"
+	    maxPoolSize = "15"
+	    maxIdleTime = "1800"
+   acquireIncrement = "2"
+      maxStatements = "0"
+  idleConnectionTestPeriod = "1800"
+  acquireRetryAttempts = "30"
+  breakAfterAcquireFailure = "true"
+  testConnectionOnCheckout = "false"/>
+	
+</Context>

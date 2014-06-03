@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="Office Project"
+  id="myeclipse.1398593293060"
+  context-root="/Office Project"
+  j2ee-spec="6.0"
+  archive="Office Project.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

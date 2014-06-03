@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+     
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName">
+			<value>java:comp/env/jdbc/eitpool4</value>
+		</property>
+	</bean>
+	 
+	<!-- 配置事务管理器 -->
+	 <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+	</bean>
+	 
+	<!-- 配置注入式事务处理<tx:annotation-driven transaction-manager="txManager"/> -->
+	
+	<!-- 配置自动事务处理 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+		<!-- hsj 2010/11/03  propagation="NOT_SUPPORTED" 必须有 否则所有方法都将起事务 -->
+    		<tx:method name="get*" read-only="true" propagation="NOT_SUPPORTED"/>
+    		<tx:method name="is*" read-only="true" propagation="NOT_SUPPORTED"/>
+    		<tx:method name="load*" read-only="true" propagation="NOT_SUPPORTED"/>
+    		<tx:method name="print*" read-only="true" propagation="NOT_SUPPORTED"/>
+    		<tx:method name="validate*" read-only="true" propagation="NOT_SUPPORTED"/>
+    		
+    		<!--邮件配置，否则SendMail.send(dbo)不能以非事务方式启动，无法发送邮件 -->
+    		<tx:method name="send*" read-only="true" propagation="NOT_SUPPORTED"/>
+    		
+    		<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+  		<!-- <aop:pointcut id="fooServiceOperation" expression="execution(* sds..bo..*.*(..))"/>-->
+
+  		<aop:pointcut id="fooServiceOperation" expression="execution(* eit..bo..*.*(..) )"/>
+  		
+  		<!--邮件配置，否则不能通过send(dbo)发送邮件
+  		<aop:pointcut id="txSendMail" expression="execution(* base.util.SendMail.send(base.util.MailInfo,base.dbo.IDBO))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txSendMail"/> -->
+		
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceOperation"/>
+		
+		
+	</aop:config>
+</beans>
